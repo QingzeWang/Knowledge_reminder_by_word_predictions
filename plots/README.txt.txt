@@ -1,0 +1,1 @@
+These are static plots. Check interactive plots in the webpage folder and the link: https://gavin0wang.shinyapps.io/Knowledge_reminder_by_word_predictions

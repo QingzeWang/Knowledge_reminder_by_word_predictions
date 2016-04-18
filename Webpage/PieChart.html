@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0067)http://127.0.0.1:16762/custom/googleVis/PieChartID20c435383cea.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" class="gr__127_0_0_1"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>PieChartID20c435383cea</title>
+
+<style type="text/css">
+body {
+  color: #444444;
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: 75%;
+  }
+  a {
+  color: #4D87C7;
+  text-decoration: none;
+}
+</style>
+<script type="text/javascript" src="./PieChart_files/saved_resource"></script><link type="text/css" href="./PieChart_files/ui+en.css" rel="stylesheet"><script type="text/javascript" src="./PieChart_files/format+en,default+en,ui+en,corechart+en.I.js"></script><link href="./PieChart_files/tooltip.css" rel="stylesheet" type="text/css"></head>
+<body data-gr-c-s-loaded="true">
+ <!-- PieChart generated in R 3.2.3 by googleVis 0.5.10 package -->
+<!-- Mon Apr 18 15:42:43 2016 -->
+
+
+<!-- jsHeader -->
+<script type="text/javascript">
+ 
+// jsData 
+function gvisDataPieChartID20c435383cea () {
+var data = new google.visualization.DataTable();
+var datajson =
+[
+ [
+ "can",
+2035,
+"can",
+"can" 
+],
+[
+ "theory",
+1930,
+"theory",
+"theory" 
+],
+[
+ "one",
+1689,
+"one",
+"one" 
+],
+[
+ "field",
+1412,
+"field",
+"field" 
+],
+[
+ "gauge",
+1292,
+"gauge",
+"gauge" 
+],
+[
+ "left",
+1243,
+"left",
+"left" 
+],
+[
+ "right",
+1210,
+"right",
+"right" 
+],
+[
+ "cal",
+1184,
+"cal",
+"cal" 
+],
+[
+ "string",
+988,
+"string",
+"string" 
+],
+[
+ "case",
+975,
+"case",
+"case" 
+] 
+];
+data.addColumn('string','string');
+data.addColumn('number','count');
+data.addColumn('string','pre');
+data.addColumn('string','cur');
+data.addRows(datajson);
+return(data);
+}
+ 
+// jsDrawChart
+function drawChartPieChartID20c435383cea() {
+var data = gvisDataPieChartID20c435383cea();
+var options = {};
+options["allowHtml"] = true;
+options["width"] =   1500;
+options["height"] =    600;
+
+
+    var chart = new google.visualization.PieChart(
+    document.getElementById('PieChartID20c435383cea')
+    );
+    chart.draw(data,options);
+    
+
+}
+  
+ 
+// jsDisplayChart
+(function() {
+var pkgs = window.__gvisPackages = window.__gvisPackages || [];
+var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
+var chartid = "corechart";
+  
+// Manually see if chartid is in pkgs (not all browsers support Array.indexOf)
+var i, newPackage = true;
+for (i = 0; newPackage && i < pkgs.length; i++) {
+if (pkgs[i] === chartid)
+newPackage = false;
+}
+if (newPackage)
+  pkgs.push(chartid);
+  
+// Add the drawChart function to the global list of callbacks
+callbacks.push(drawChartPieChartID20c435383cea);
+})();
+function displayChartPieChartID20c435383cea() {
+  var pkgs = window.__gvisPackages = window.__gvisPackages || [];
+  var callbacks = window.__gvisCallbacks = window.__gvisCallbacks || [];
+  window.clearTimeout(window.__gvisLoad);
+  // The timeout is set to 100 because otherwise the container div we are
+  // targeting might not be part of the document yet
+  window.__gvisLoad = setTimeout(function() {
+  var pkgCount = pkgs.length;
+  google.load("visualization", "1", { packages:pkgs, callback: function() {
+  if (pkgCount != pkgs.length) {
+  // Race condition where another setTimeout call snuck in after us; if
+  // that call added a package, we must not shift its callback
+  return;
+}
+while (callbacks.length > 0)
+callbacks.shift()();
+} });
+}, 100);
+}
+ 
+// jsFooter
+</script>
+ 
+<!-- jsChart -->  
+<script type="text/javascript" src="./PieChart_files/jsapi"></script>
+ 
+<!-- divChart -->
+  
+<div id="PieChartID20c435383cea" style="width: 1500; height: 600;"><div style="position: relative;"><div dir="ltr" style="position: relative; width: 1500px; height: 600px;"><div aria-label="A chart." style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;"><svg width="1500" height="600" aria-label="A chart." style="overflow: hidden;"><defs id="defs"></defs><rect x="0" y="0" width="1500" height="600" stroke="none" stroke-width="0" fill="#ffffff"></rect><g><rect x="901" y="115" width="380" height="250" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><rect x="901" y="115" width="380" height="16" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="923" y="128.6" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#222222">can</text></g><circle cx="909" cy="123" r="8" stroke="none" stroke-width="0" fill="#3366cc"></circle></g><g><rect x="901" y="141" width="380" height="16" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="923" y="154.6" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#222222">theory</text></g><circle cx="909" cy="149" r="8" stroke="none" stroke-width="0" fill="#dc3912"></circle></g><g><rect x="901" y="167" width="380" height="16" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="923" y="180.6" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#222222">one</text></g><circle cx="909" cy="175" r="8" stroke="none" stroke-width="0" fill="#ff9900"></circle></g><g><rect x="901" y="193" width="380" height="16" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="923" y="206.6" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#222222">field</text></g><circle cx="909" cy="201" r="8" stroke="none" stroke-width="0" fill="#109618"></circle></g><g><rect x="901" y="219" width="380" height="16" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="923" y="232.6" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#222222">gauge</text></g><circle cx="909" cy="227" r="8" stroke="none" stroke-width="0" fill="#990099"></circle></g><g><rect x="901" y="245" width="380" height="16" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="923" y="258.6" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#222222">left</text></g><circle cx="909" cy="253" r="8" stroke="none" stroke-width="0" fill="#0099c6"></circle></g><g><rect x="901" y="271" width="380" height="16" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="923" y="284.6" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#222222">right</text></g><circle cx="909" cy="279" r="8" stroke="none" stroke-width="0" fill="#dd4477"></circle></g><g><rect x="901" y="297" width="380" height="16" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="923" y="310.6" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#222222">cal</text></g><circle cx="909" cy="305" r="8" stroke="none" stroke-width="0" fill="#66aa00"></circle></g><g><rect x="901" y="323" width="380" height="16" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="923" y="336.6" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#222222">string</text></g><circle cx="909" cy="331" r="8" stroke="none" stroke-width="0" fill="#b82e2e"></circle></g><g><rect x="901" y="349" width="380" height="16" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="923" y="362.6" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#222222">case</text></g><circle cx="909" cy="357" r="8" stroke="none" stroke-width="0" fill="#316395"></circle></g></g><g><path d="M547,301L547,116A185,185,0,0,1,693.7429031416891,188.34335182711652L547,301A0,0,0,0,0,547,301" stroke="#ffffff" stroke-width="1" fill="#3366cc"></path><text text-anchor="start" x="591.2929668166546" y="171.11562427539423" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#ffffff">14.6%</text></g><g><path d="M547,301L693.7429031416891,188.34335182711652A185,185,0,0,1,727.7782028267538,340.2968368030946L547,301A0,0,0,0,0,547,301" stroke="#ffffff" stroke-width="1" fill="#dc3912"></path><text text-anchor="start" x="666.2583310133023" y="274.84826176474274" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#ffffff">13.8%</text></g><g><path d="M547,301L727.7782028267538,340.2968368030946A185,185,0,0,1,650.915848067297,454.05716749128226L547,301A0,0,0,0,0,547,301" stroke="#ffffff" stroke-width="1" fill="#ff9900"></path><text text-anchor="start" x="645.2867426788961" y="388.2097615914238" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#ffffff">12.1%</text></g><g><path d="M547,301L468.3860897374627,133.53402401313352A185,185,0,0,1,547,116L547,301A0,0,0,0,0,547,301" stroke="#ffffff" stroke-width="1" fill="#316395"></path><text text-anchor="start" x="501.012963101972" y="151.9771466326476" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#ffffff">7%</text></g><g><path d="M547,301L403.9848116730827,183.64730123334886A185,185,0,0,1,468.3860897374627,133.53402401313352L547,301A0,0,0,0,0,547,301" stroke="#ffffff" stroke-width="1" fill="#b82e2e"></path><text text-anchor="start" x="436.0368065761469" y="187.13169136926402" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#ffffff">7.1%</text></g><g><path d="M547,301L364.194399962314,272.5902728830148A185,185,0,0,1,403.9848116730827,183.64730123334886L547,301A0,0,0,0,0,547,301" stroke="#ffffff" stroke-width="1" fill="#66aa00"></path><text text-anchor="start" x="392.71417952049194" y="245.62982094437479" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#ffffff">8.5%</text></g><g><path d="M547,301L375.92733691553667,371.421189603625A185,185,0,0,1,364.194399962314,272.5902728830148L547,301A0,0,0,0,0,547,301" stroke="#ffffff" stroke-width="1" fill="#dd4477"></path><text text-anchor="start" x="379.96447954241614" y="324.2930906172088" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#ffffff">8.7%</text></g><g><path d="M547,301L439.3946938550536,451.48620564507684A185,185,0,0,1,375.92733691553667,371.421189603625L547,301A0,0,0,0,0,547,301" stroke="#ffffff" stroke-width="1" fill="#0099c6"></path><text text-anchor="start" x="411.5671340135536" y="399.6887669857401" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#ffffff">8.9%</text></g><g><path d="M547,301L539.7566973167884,485.85814714596535A185,185,0,0,1,439.3946938550536,451.48620564507684L547,301A0,0,0,0,0,547,301" stroke="#ffffff" stroke-width="1" fill="#990099"></path><text text-anchor="start" x="478.78519809562863" y="453.2212818506798" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#ffffff">9.3%</text></g><g><path d="M547,301L650.915848067297,454.05716749128226A185,185,0,0,1,539.7566973167884,485.85814714596535L547,301A0,0,0,0,0,547,301" stroke="#ffffff" stroke-width="1" fill="#109618"></path><text text-anchor="start" x="566.8575564098269" y="454.659275201912" font-family="Arial" font-size="16" stroke="none" stroke-width="0" fill="#ffffff">10.1%</text></g><g></g></svg><div aria-label="A tabular representation of the data in the chart." style="position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden;"><table><thead><tr><th>string</th><th>count</th><th>pre</th><th>cur</th></tr></thead><tbody><tr><td>can</td><td>2035</td><td>can</td><td>can</td></tr><tr><td>theory</td><td>1930</td><td>theory</td><td>theory</td></tr><tr><td>one</td><td>1689</td><td>one</td><td>one</td></tr><tr><td>field</td><td>1412</td><td>field</td><td>field</td></tr><tr><td>gauge</td><td>1292</td><td>gauge</td><td>gauge</td></tr><tr><td>left</td><td>1243</td><td>left</td><td>left</td></tr><tr><td>right</td><td>1210</td><td>right</td><td>right</td></tr><tr><td>cal</td><td>1184</td><td>cal</td><td>cal</td></tr><tr><td>string</td><td>988</td><td>string</td><td>string</td></tr><tr><td>case</td><td>975</td><td>case</td><td>case</td></tr></tbody></table></div></div></div><div aria-hidden="true" style="display: none; position: absolute; top: 610px; left: 1510px; white-space: nowrap; font-family: Arial; font-size: 16px;">case</div><div></div></div></div>
+ <div><span>Data: freq1[1:10, ] • Chart ID: <a href="http://127.0.0.1:16762/custom/googleVis/Chart_PieChartID20c435383cea.html">PieChartID20c435383cea</a> • <a href="https://github.com/mages/googleVis">googleVis-0.5.10</a></span><br> 
+<!-- htmlFooter -->
+<span> 
+  R version 3.2.3 (2015-12-10) 
+  • <a href="https://developers.google.com/terms/">Google Terms of Use</a> • <a href="https://google-developers.appspot.com/chart/interactive/docs/gallery/piechart">Documentation and Data Policy</a>
+</span></div>
+
+
+</body></html>
