@@ -1,0 +1,274 @@
+---
+title: "Natural Language Processing"
+subtitle: '- word prediction through the Back-off model and Latent Sementic Analysis'
+author: "Gavin Wang"
+date: "May 2, 2016"
+output: html_document
+<!-- runtime: shiny -->
+---
+
+## **Section 1 ** : *Introduction*
+The project is to develop an application of knowledge reminder by utilizing word predictions from different fields. The purpose of this application is to help people connect relevant knowledge together and further expand their horizon, besides facilitating their life.
+
+
+## **Section 2 ** : *Data summary and preprocessing*
+The dataset I used consists two parts. One part is the data of blogs, news and twitters, which are provided by [Swiftkey Company](https://swiftkey.com/en) and [Coursera](https://www.coursera.org/). The other part is arxiv papers in the tex format from [2003 KDD cup dataset](http://www.cs.cornell.edu/projects/kddcup/).
+
+```{r echo = FALSE,results=FALSE,cache = TRUE,include=FALSE}
+##Get and Sample the data
+library(stringi) #install.packages("stringi") %Allows for fast, correct, consistent, portable, as well as convenient character string/text processing in every locale and any native encoding
+#library(doParallel) # chooseCRANmirror() //  install.packages("doParallel", dependencies = c("Depends", "Imports")) 
+library(ggplot2) #for static plot
+library(tm) #A framework for text mining applications
+library(magrittr) #provide pipe-like operator; to decrease development time and to improve readability and maintainability of code
+library(RWeka) #a collection of machine learning algorithms for data mining tasks written in Java, containing tools for data pre-processing, classification, regression, clustering, association rules, and visualization
+library(data.table) #Fast aggregation of large data (e.g. 100GB in RAM), fast ordered joins, fast add/modify/delete of columns by group using no copies at all
+library(slam)#Data structures and algorithms for sparse arrays and matrices,
+library(googleVis)#R interface to Google charts API; create interatice charts
+library(wordcloud)  #for word cluster
+library(fpc) #Various methods for clustering and cluster validation.
+library(cluster)
+library(lsa)
+library(stringr)
+library(RSQLite)
+
+## Checking the size and length of the files and calculate the word count
+blogsFile <- file.info("./en_US/en_US.blogs.txt")$size / 1024.0 / 1024.0
+newsFile <- file.info("./en_US/en_US.news.txt")$size / 1024.0 / 1024.0
+twitterFile <- file.info("./en_US/en_US.twitter.txt")$size / 1024.0 / 1024.0
+arxiv <-  sum(file.info(list.files("../data", all.files = TRUE, full.names = TRUE, recursive = TRUE))$size)/ 1024.0 / 1024.0
+
+fileSummary <- data.frame(
+        fileName = c("Blogs","News","Twitter","arXiv"),
+        fileSize_MB = c(round(blogsFile, digits = 2), 
+                     round(newsFile,digits = 2), 
+                     round(twitterFile, digits = 2),
+                     round(arxiv, digits = 2))
+)
+```
+The *summary of the dataset* is listed as following.
+```{r echo = FALSE,results=TRUE,cache = TRUE}
+fileSummary
+```
+
+I build a text corpus by using the R package *tm* after data loading. Since the size of data is too large to fit into the RAM, I randomly sample the data. The *summary of the sampled data* is listed as following.
+```{r echo = FALSE,results=FALSE,cache = TRUE}
+load("../corp_news.RData")
+load("../arxiv_corpus.RData")
+twitterFile_sample <- as.numeric(object.size(tCorp))/ 1024.0 / 1024.0
+blogsFile_sample <- as.numeric(object.size(bCorp))/ 1024.0 / 1024.0
+newsFile_sample <- as.numeric(object.size(nCorp))/ 1024.0 / 1024.0
+arxivFile_sample <- as.numeric(object.size(arxiv_corpus))/ 1024.0 / 1024.0
+rm(tCorp, nCorp,bCorp,arxiv_corpus)
+```
+```{r echo = FALSE,results=TRUE,cache = TRUE}
+fileSummary_sample <- data.frame(
+        fileName = c("Blogs","News","Twitter","arXiv"),
+        fileSize_MB = c(round(blogsFile_sample, digits = 2), 
+                     round(newsFile_sample,digits = 2), 
+                     round(twitterFile_sample, digits = 2),
+                     round(arxivFile_sample, digits = 2))
+)
+fileSummary_sample
+```
+
+After removing whitesspace, punctuation, numbers, non-english words and specific words and converting all characters to lower case, I tokenize the corpus into  unigrams, bigrams, trigrams and quadgrams, respectively. Furthermore, I build term-document matrices with these n-grams. Concretely, the bigrams term-document matrix from the arxiv data, for instance, is in a format as listed below.
+```{r echo = TRUE,results=TRUE,cache = TRUE}
+load("../tdm_arxiv_sparse.RData")
+inspect(tdm2_arxiv[10:15,10:15])
+```
+
+## **Section 3 ** : *Exploratory Data Analysis: term frequency and wordcloud*
+```{r setOptions, message=FALSE,include=FALSE}
+library(googleVis)
+op <- options(gvis.plot.tag='chart')
+```
+```{r echo = FALSE,results=FALSE,cache = TRUE}
+load("../freqData_arxiv.RData")
+unigramPlot <- gvisPieChart(freq1_arxiv[1:10,], "string", "count",                  
+                            options=list(width=1500, height=600))
+## bigram plot
+bigramPlot <- gvisColumnChart(freq2_arxiv[1:12,], "string", "count",                  
+                              options=list(width=1000, height=400))
+## trigram plot
+trigramPlot <- gvisColumnChart(freq3_arxiv[1:12,], "string", "count",                  
+                               options=list(width=1000, height = 400))
+## quadgram plot
+#quadgramPlot <- gvisColumnChart(freq4[1:15,], "string", "count",                  
+#                                options=list(legend="none", width=750, height=300))
+GT <- gvisMerge(bigramPlot, trigramPlot,horizontal=FALSE) 
+```
+In this section, I perform exploratory data analysis including interactive chart plot for term frequency and word cloud plot. Packages [googleVis](https://cran.r-project.org/web/packages/googleVis/index.html) and [wordcloud](https://cran.r-project.org/web/packages/wordcloud/index.html) are used. 
+
+* ###term freqency for arxiv data
+
+The frequency of unigrams is shown in a piechart, while the frequency of bigrams and trigrams are shown in interactive columncharts.
+```{r results='asis', tidy=FALSE}
+plot(unigramPlot) #unigram pie chart for data from arxiv
+```
+```{r results='asis', tidy=FALSE}
+plot(GT) #bigram and trigram plots for data from arxiv
+```
+* ###word cloud for arxiv data
+
+  1. Word cloud of unigrams for arXiv data
+```{r echo = FALSE,results=TRUE,cache = TRUE, warning = FALSE, include = TRUE}
+#Visualize the word appearing frequently
+load("../freqData_arxiv.RData")
+wordcloud(freq1_arxiv$string, freq1_arxiv$count, max.words=200,scale=c(5, .2), random.order=F, colors=brewer.pal(7, "Dark2"))   
+```
+  
+  2. Word cloud of bigrams for arXiv data
+```{r echo = FALSE,results=TRUE,cache = TRUE, warning = FALSE, include = TRUE}
+wordcloud(freq2_arxiv$string, freq2_arxiv$count, max.words=100,scale=c(5, .1), colors=brewer.pal(7, "Dark2"))  
+```
+
+* ###word cloud for arxiv data
+
+  1. Word cloud of unigrams for news/blog/twitter data
+```{r echo = FALSE,results=TRUE,cache = TRUE, warning = FALSE, include = TRUE}
+#Visualize the word appearing frequently
+load("../freqData_news.RData")
+wordcloud(freq1_news$string, freq1_news$count, max.words=200,scale=c(10, .7), random.order=F, colors=brewer.pal(7, "Dark2"), rot.per=.55)   
+```
+  
+  2. Word cloud of bigrams for news/blog/twitter data
+```{r echo = FALSE,results=TRUE,cache = TRUE, warning = FALSE, include = TRUE}
+wordcloud(freq2_news$string, freq2_news$count, max.words=100,scale=c(7, .1),random.order=F, colors=brewer.pal(7, "Dark2"), rot.per=.15)  
+```
+
+## **Section 4 ** : *Interactive webpage app: word prediction*
+The word prediction is based on the Katz's back-off model, which is a count-based method. This interactive webpage [app](https://gavin0wang.shinyapps.io/shinyApp/) is developed by using R package [Shiny](https://cran.r-project.org/web/packages/shiny/index.html). 
+<!--
+```{r, echo = FALSE, cache = FALSE}
+library(shiny)
+source('predict.R')
+shinyApp(
+  ui = shinyUI(fluidPage(
+    # Application title
+  titlePanel("Knowledge reminder based on the known words"),
+  h4("Expand your horizon by word prediction"),
+  hr(),
+  
+  # Sidebar with a slider input for the number of bins
+  sidebarLayout(
+    sidebarPanel(
+      textInput("text", label = h3("Please type a word"), value = "quantum"),
+      helpText("hit enter or press the button"),
+      submitButton("Predict"),
+      hr()
+    ),
+    
+    # Show a plot of the generated distribution
+    mainPanel(
+      br(),
+      h3("The relevant word is most likey to be:"),
+      h1(textOutput("predicted"), align="center", style="color:blue"),
+      hr(),
+      # Create a spot for the barplot
+      h3("Possible top candidates:"),
+      plotOutput("pred_plot")  
+    )
+  )
+  )),
+  
+  server = shinyServer(function(input, output) {
+  # input$text and input$action are available
+  # output$sentence and output$predicted should be made available
+  db <- dbConnect(SQLite(), dbname="train.db")
+  dbout <- reactive({ngram_backoff(input$text, db)})
+  
+  output$sentence <- renderText({input$text})
+  output$predicted <- renderText({
+    out <- dbout()
+    return(unlist(out)[1])
+    })
+  output$otherp <- renderText({
+    out <- dbout()
+    return(paste(unlist(out)[2:5],","))
+    })
+  output$pred_plot <- renderPlot({
+    out <- dbout()
+    freq = unlist(out[[2]])
+    names(freq) <- unlist(strsplit(out[[1]]," "))
+#     out2 <- data.table(word = names(freq),freq = freq)
+#     g <- ggplot(out2, aes(x= word, y= freq))+ geom_bar()
+#     g <- g + ylab("Frequency") + ggtitle("Adjusted word frequency")
+#     print(g)
+    barplot(freq,ylab="Frequency", col=("Green"))
+  })
+}),
+
+  options = list(height = 750)
+)
+```
+-->
+
+## **Section 5 ** : *Latent sementic analysis: term similarity*
+In order to check the term similarity, the ngrams are expressed in the document space. One can do the culster analysis among similar terms by calculating the Euclidian distances between vectors after scaling the term-document matrices.
+
+```{r echo = FALSE,results=FALSE,cache = TRUE, warning = FALSE, include = TRUE}
+load("../tdm_arxiv_sparse.RData")
+tdm1_arxiv_n <- removeSparseTerms(tdm1_arxiv, 0.2) # Remove sparse terms; make a matrix that is 80% empty space   
+tdm2_arxiv_n <- removeSparseTerms(tdm2_arxiv, 0.7) # Remove sparse terms; make a matrix that is 90% empty space   
+```
+
+* ### cluster of unigrams for arxiv data
+```{r echo = FALSE,results=TRUE,cache = TRUE, warning = FALSE, include = TRUE}
+## For unigram
+inspect(tdm1_arxiv_n[1:5,1:5])
+dist1 <- dist(t(scale(t(tdm1_arxiv_n))), method="euclidian") 
+fit1 <- hclust(dist1, method="ward.D2") 
+plot(fit1, main = "cluster dendrogram for unigrams") # display dendogram
+groups <- cutree(fit1, k=5) # cut tree into 5 clusters
+# draw dendogram with red borders around the 5 clusters 
+rect.hclust(fit1, k=5, border="blue")
+```
+
+* ### cluster of bigrams for arxiv data
+```{r echo = FALSE,results=TRUE,cache = TRUE, warning = FALSE, include = TRUE}
+## For bigram
+inspect(tdm2_arxiv_n[1:5,1:5])
+dist2 <- dist(t(scale(t(tdm2_arxiv_n))), method="euclidian")   
+fit2 <- hclust(dist2, method="ward.D2") 
+plot(fit2, main = "cluster dendrogram for bigrams") # display dendogram
+groups <- cutree(fit2, k=5) # cut tree into 5 clusters
+# draw dendogram with red borders around the 5 clusters 
+rect.hclust(fit2, k=5, border="blue")
+```
+
+I also use the [lsa](https://cran.r-project.org/web/packages/lsa/index.html) package and the **k-means** method to show the cluster of similar terms. Here, **tf-idf** weighting is applied to the term-document matrix before I map the term-document matrix to LSA space. The clustering is shown on the 2D plane with two main components by using **PCA**.
+
+```{r echo = FALSE,results=TRUE,cache = TRUE, warning = FALSE, include = TRUE}
+tdm2_tfidf <- lw_logtf(as.matrix(tdm2_arxiv_n))*gw_idf(as.matrix(tdm2_arxiv_n))  # tf-idf weighting
+tdm2_lsa <- lsa(tdm2_tfidf) #Create the latent sementic space
+dist2_lsa <- dist(as.textmatrix(tdm2_lsa))
+kmeans_fit2_lsa <- kmeans(dist2_lsa, 3)   
+clusplot(as.matrix(dist2_lsa), kmeans_fit2_lsa$cluster, color=TRUE, shade=TRUE, labels=2, lines=0, main = "term similarity by k-means in LSA space")
+```
+
+By doing the latent sementic analysis, I could recommend possible relavent terms to further broden one's vision. For instance, assume one is familiar with a physics term, *quantum field*, what other terms might he be interested in?
+
+```{r echo = TRUE,results=TRUE,cache = TRUE, warning = FALSE, include = TRUE}
+associate(as.textmatrix(tdm2_lsa), "quantum field", measure = "cosine", threshold = 0.58)
+```
+
+## **Section 6 ** : *Outlook*
+*  ### Work I have done
+  1. word prediction by the Katz's back-off model
+  2. word/term assiciation by latent sementic analysis
+  3. webpage application for word prediction
+
+The analysis I did above is based on count-based methods. The syntactic information is still missing. Thus, direct predictive methods with vector presentation of words from models, such as [The Skip-gram and Continuous Bag-of-Words model](https://www.tensorflow.org/versions/r0.8/tutorials/index.html), is necessary. Fortunately, [Alphabeta Company](https://abc.xyz/) provides an open source software library [tensorflow](https://www.tensorflow.org/), for natural languge processing. There is also an online course, [Deep Learning for Natural Language Processing](http://cs224d.stanford.edu/) provided by stanford university.
+
+* ### More that I plan to do:
+  1. more data, such as arxiv papers from other fields, wikipedia data, etc
+  2. high-performance computation
+  3. word prediction through [recurrent neural network](https://www.tensorflow.org/versions/r0.8/tutorials/recurrent/index.html#recurrent-neural-networks) method by using the tensorflow library
+```{r echo= FALSE,results=FALSE,cache = FALSE}
+library(png);
+nnPNG <- readPNG("./softmax-regression.png");
+plot(1,axes=F)
+rasterImage(nnPNG, 0.6, 0.6, 1.4, 1.4)
+title(main = "Recurrent Neural Network",	xlab="", ylab="")
+```
