@@ -1,15 +1,14 @@
 ---
 title: "Natural Language Processing"
-subtitle: '- word prediction through the Back-off model and Latent Sementic Analysis'
+subtitle: '- Word prediction through the Katzs back-off model and latent semantic analysis'
 author: "Gavin Wang"
 date: "May 2, 2016"
 output: html_document
-<!-- runtime: shiny -->
 ---
+<!-- runtime: shiny -->
 
 ## **Section 1 ** : *Introduction*
 The project is to develop an application of knowledge reminder by utilizing word predictions from different fields. The purpose of this application is to help people connect relevant knowledge together and further expand their horizon, besides facilitating their life.
-
 
 ## **Section 2 ** : *Data summary and preprocessing*
 The dataset I used consists two parts. One part is the data of blogs, news and twitters, which are provided by [Swiftkey Company](https://swiftkey.com/en) and [Coursera](https://www.coursera.org/). The other part is arxiv papers in the tex format from [2003 KDD cup dataset](http://www.cs.cornell.edu/projects/kddcup/).
@@ -72,7 +71,7 @@ fileSummary_sample <- data.frame(
 fileSummary_sample
 ```
 
-After removing whitesspace, punctuation, numbers, non-english words and specific words and converting all characters to lower case, I tokenize the corpus into  unigrams, bigrams, trigrams and quadgrams, respectively. Furthermore, I build term-document matrices with these n-grams. Concretely, the bigrams term-document matrix from the arxiv data, for instance, is in a format as listed below.
+After removing whitespace, punctuation, numbers, non-english words and specific words and converting all characters to lower case, I tokenize the corpus into  unigrams, bigrams, trigrams and quadgrams, respectively. Furthermore, I build term-document matrices with these n-grams. Concretely, the bigrams term-document matrix from the arxiv data, for instance, is in a format as listed below.
 ```{r echo = TRUE,results=TRUE,cache = TRUE}
 load("../tdm_arxiv_sparse.RData")
 inspect(tdm2_arxiv[10:15,10:15])
@@ -123,7 +122,7 @@ wordcloud(freq1_arxiv$string, freq1_arxiv$count, max.words=200,scale=c(5, .2), r
 wordcloud(freq2_arxiv$string, freq2_arxiv$count, max.words=100,scale=c(5, .1), colors=brewer.pal(7, "Dark2"))  
 ```
 
-* ###word cloud for arxiv data
+* ###word cloud for news/blog/twitter data
 
   1. Word cloud of unigrams for news/blog/twitter data
 ```{r echo = FALSE,results=TRUE,cache = TRUE, warning = FALSE, include = TRUE}
@@ -138,7 +137,7 @@ wordcloud(freq2_news$string, freq2_news$count, max.words=100,scale=c(7, .1),rand
 ```
 
 ## **Section 4 ** : *Interactive webpage app: word prediction*
-The word prediction is based on the Katz's back-off model, which is a count-based method. This interactive webpage [app](https://gavin0wang.shinyapps.io/shinyApp/) is developed by using R package [Shiny](https://cran.r-project.org/web/packages/shiny/index.html). 
+The word prediction is based on the Katz's back-off model, which is a count-based method. This interactive webpage [app (click to open the word-prediction app webpage)](https://gavin0wang.shinyapps.io/shinyApp/) is developed by using R package [Shiny](https://cran.r-project.org/web/packages/shiny/index.html). 
 <!--
 ```{r, echo = FALSE, cache = FALSE}
 library(shiny)
@@ -204,7 +203,7 @@ shinyApp(
 ```
 -->
 
-## **Section 5 ** : *Latent sementic analysis: term similarity*
+## **Section 5 ** : *Latent semantic analysis: term similarity*
 In order to check the term similarity, the ngrams are expressed in the document space. One can do the culster analysis among similar terms by calculating the Euclidian distances between vectors after scaling the term-document matrices.
 
 ```{r echo = FALSE,results=FALSE,cache = TRUE, warning = FALSE, include = TRUE}
@@ -241,13 +240,13 @@ I also use the [lsa](https://cran.r-project.org/web/packages/lsa/index.html) pac
 
 ```{r echo = FALSE,results=TRUE,cache = TRUE, warning = FALSE, include = TRUE}
 tdm2_tfidf <- lw_logtf(as.matrix(tdm2_arxiv_n))*gw_idf(as.matrix(tdm2_arxiv_n))  # tf-idf weighting
-tdm2_lsa <- lsa(tdm2_tfidf) #Create the latent sementic space
+tdm2_lsa <- lsa(tdm2_tfidf) #Create the latent semantic space
 dist2_lsa <- dist(as.textmatrix(tdm2_lsa))
 kmeans_fit2_lsa <- kmeans(dist2_lsa, 3)   
 clusplot(as.matrix(dist2_lsa), kmeans_fit2_lsa$cluster, color=TRUE, shade=TRUE, labels=2, lines=0, main = "term similarity by k-means in LSA space")
 ```
 
-By doing the latent sementic analysis, I could recommend possible relavent terms to further broden one's vision. For instance, assume one is familiar with a physics term, *quantum field*, what other terms might he be interested in?
+By doing the latent semantic analysis, I could recommend possible relavent terms to further broden one's vision. For instance, assume one is familiar with a physics term, *quantum field*, what other terms might he be interested in?
 
 ```{r echo = TRUE,results=TRUE,cache = TRUE, warning = FALSE, include = TRUE}
 associate(as.textmatrix(tdm2_lsa), "quantum field", measure = "cosine", threshold = 0.58)
@@ -255,16 +254,19 @@ associate(as.textmatrix(tdm2_lsa), "quantum field", measure = "cosine", threshol
 
 ## **Section 6 ** : *Outlook*
 *  ### Work I have done
+
   1. word prediction by the Katz's back-off model
-  2. word/term assiciation by latent sementic analysis
+  2. word/term assiciation by latent semantic analysis
   3. webpage application for word prediction
 
-The analysis I did above is based on count-based methods. The syntactic information is still missing. Thus, direct predictive methods with vector presentation of words from models, such as [The Skip-gram and Continuous Bag-of-Words model](https://www.tensorflow.org/versions/r0.8/tutorials/index.html), is necessary. Fortunately, [Alphabeta Company](https://abc.xyz/) provides an open source software library [tensorflow](https://www.tensorflow.org/), for natural languge processing. There is also an online course, [Deep Learning for Natural Language Processing](http://cs224d.stanford.edu/) provided by stanford university.
+The analysis I did above is based on count-based methods. The syntactic information is still missing. Thus, direct predictive methods with word embeding, such as [The Skip-gram model and Continuous Bag-of-Words model](https://www.tensorflow.org/versions/r0.8/tutorials/word2vec/index.html#vector-representations-of-words), is necessary. Fortunately, [Alphabeta Company](https://abc.xyz/) provides an open source software library [tensorflow](https://www.tensorflow.org/), for natural languge processing. There is also an online course, [Deep Learning for Natural Language Processing](http://cs224d.stanford.edu/) provided by stanford university.
 
 * ### More that I plan to do:
+
   1. more data, such as arxiv papers from other fields, wikipedia data, etc
   2. high-performance computation
   3. word prediction through [recurrent neural network](https://www.tensorflow.org/versions/r0.8/tutorials/recurrent/index.html#recurrent-neural-networks) method by using the tensorflow library
+
 ```{r echo= FALSE,results=FALSE,cache = FALSE}
 library(png);
 nnPNG <- readPNG("./softmax-regression.png");
